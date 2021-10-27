@@ -3,18 +3,35 @@ package main
 import (
 	"context"
 	"fmt"
+	"helm.sh/helm/v3/pkg/action"
+	"helm.sh/helm/v3/pkg/kube"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	//"log"
 	"os"
 	"path"
-
-	//"k8s.io/cli-runtime/pkg/genericclioptions"
+	//"helm.sh/helm/v3/pkg/action"
+	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 )
 
+func init() {
+	d, _ := os.Getwd()
+	kubeConfig := path.Join(d, "config")
+
+	actionConfig := new(action.Configuration)
+	getter := &genericclioptions.ConfigFlags{
+		KubeConfig: &kubeConfig,
+	}
+	kc := kube.New(getter)
+	actionConfig.RESTClientGetter = getter
+	actionConfig.KubeClient = kc
+
+}
+
 func main() {
 	d, _ := os.Getwd()
-	config, err := clientcmd.BuildConfigFromFlags("https://120.25.216.113:6443", path.Join(d, "config"))
+	config, err := clientcmd.BuildConfigFromFlags("", path.Join(d, "config"))
 	if err != nil {
 		fmt.Printf("%v", err)
 		return
@@ -25,9 +42,6 @@ func main() {
 		fmt.Printf("%v", err)
 		return
 	}
-	version, err := clientset.Discovery().ServerVersion()
-	fmt.Printf("%v", version)
-	fmt.Printf("%v", err)
 	namespaceList, err := clientset.CoreV1().Namespaces().List(context.Background(), metav1.ListOptions{})
 	if err != nil {
 		fmt.Printf("%v", err)
