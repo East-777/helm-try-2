@@ -26,6 +26,8 @@ func (r *InstallRequest) runInstall(client *action.Install, valueOpts *values.Op
 		client.Version = ">0.0.0-0"
 	}
 
+	client.ReleaseName = r.name
+
 	chartPath, err := client.ChartPathOptions.LocateChart(r.chart, r.settings)
 	if err != nil {
 		return nil, err
