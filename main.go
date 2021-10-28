@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"helm.sh/helm/v3/pkg/action"
+	"helm.sh/helm/v3/pkg/cli"
 	"helm.sh/helm/v3/pkg/kube"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	//"log"
@@ -14,6 +15,8 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 )
+
+var settings = cli.New()
 
 func init() {
 	d, _ := os.Getwd()
@@ -26,6 +29,8 @@ func init() {
 	kc := kube.New(getter)
 	actionConfig.RESTClientGetter = getter
 	actionConfig.KubeClient = kc
+
+	settings.KubeConfig = kubeConfig
 
 }
 
