@@ -22,13 +22,6 @@ const (
 var settings = cli.New()
 var actionConfig = new(action.Configuration)
 
-func debug(format string, v ...interface{}) {
-	if settings.Debug {
-		format = fmt.Sprintf("[debug] %s\n", format)
-		log.Output(2, fmt.Sprintf(format, v...))
-	}
-}
-
 func init() {
 	d, _ := os.Getwd()
 	kubeConfig := path.Join(d, "config")
@@ -40,7 +33,7 @@ func init() {
 	//actionConfig.RESTClientGetter = getter
 	//actionConfig.KubeClient = kc
 
-	actionConfig.Init(getter, settings.Namespace(), "memory", debug)
+	actionConfig.Init(getter, settings.Namespace(), "memory", log.Printf)
 
 	settings.KubeConfig = kubeConfig
 	settings.RegistryConfig = repoConfig
