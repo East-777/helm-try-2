@@ -18,7 +18,7 @@ type InstallRel struct {
 	chart  string
 }
 
-func (r *InstallRel) Run() (*release.Release, error) {
+func (r *InstallRel) Install() (*release.Release, error) {
 
 	client := action.NewInstall(r.config.Configuration)
 	valueOpts := &values.Options{}

@@ -10,7 +10,7 @@ type UninstallRel struct {
 	name   string
 }
 
-func (r *UninstallRel) Run() error {
+func (r *UninstallRel) Uninstall() error {
 	unInstall := action.NewUninstall(r.config.Configuration)
 	_, err := unInstall.Run(r.name)
 	return err
