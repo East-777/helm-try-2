@@ -13,31 +13,29 @@ import (
 )
 
 type InstallRel struct {
-	config *config.Config
-	name   string
-	chart  string
+	Config *config.Config
+	Name   string
+	Chart  string
 }
 
 func (r *InstallRel) Install() (*release.Release, error) {
 
-	client := action.NewInstall(r.config.Configuration)
+	client := action.NewInstall(r.Config.Configuration)
 	valueOpts := &values.Options{}
 
-	fmt.Printf("Original chart version: %s", client.Version)
 	if client.Version == "" && client.Devel {
-		fmt.Printf("setting version to >0.0.0-0")
 		client.Version = ">0.0.0-0"
 	}
 
-	client.ReleaseName = r.name
+	client.ReleaseName = r.Name
 
-	chartPath, err := client.ChartPathOptions.LocateChart(r.chart, r.config.EnvSettings)
+	chartPath, err := client.ChartPathOptions.LocateChart(r.Chart, r.Config.EnvSettings)
 	if err != nil {
 		return nil, err
 	}
 	fmt.Printf("CHART PATH: %s", chartPath)
 
-	p := getter.All(r.config.EnvSettings)
+	p := getter.All(r.Config.EnvSettings)
 	vals, err := valueOpts.MergeValues(p)
 	if err != nil {
 		return nil, err
@@ -61,9 +59,9 @@ func (r *InstallRel) Install() (*release.Release, error) {
 					Keyring:          client.ChartPathOptions.Keyring,
 					SkipUpdate:       false,
 					Getters:          p,
-					RepositoryConfig: r.config.EnvSettings.RepositoryConfig,
-					RepositoryCache:  r.config.EnvSettings.RepositoryCache,
-					Debug:            r.config.EnvSettings.Debug,
+					RepositoryConfig: r.Config.EnvSettings.RepositoryConfig,
+					RepositoryCache:  r.Config.EnvSettings.RepositoryCache,
+					Debug:            r.Config.EnvSettings.Debug,
 				}
 				if err := man.Update(); err != nil {
 					return nil, err
@@ -78,7 +76,7 @@ func (r *InstallRel) Install() (*release.Release, error) {
 		}
 	}
 
-	client.Namespace = r.config.EnvSettings.Namespace()
+	client.Namespace = r.Config.EnvSettings.Namespace()
 
 	return client.Run(chartRequested, vals)
 }

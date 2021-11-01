@@ -10,11 +10,14 @@ import (
 )
 
 const (
-	repoConfig = "F:/GoLand/helm-try-2/testdata/repositories.yaml"
-	repoCache  = "F:/GoLand/helm-try-2/testdata/repository"
+	repoConfig = "testdata/repositories.yaml"
+	repoCache  = "testdata/repository"
 )
 
 func New(namespace string) (*Config, error) {
+	if namespace == "" {
+		namespace = "default"
+	}
 
 	settings := cli.New()
 	config := &action.Configuration{}
@@ -31,8 +34,8 @@ func New(namespace string) (*Config, error) {
 	}
 
 	settings.KubeConfig = kubeConfig
-	settings.RegistryConfig = repoConfig
-	settings.RepositoryCache = repoCache
+	settings.RepositoryConfig = path.Join(pwd, repoConfig)
+	settings.RepositoryCache = path.Join(pwd, repoCache)
 
 	return &Config{
 		Configuration: config,
