@@ -1,26 +1,102 @@
-apiVersion: v1
+apiVersion: ""
+generated: "0001-01-01T00:00:00Z"
 repositories:
-  - name: testing
-    url: "http://example.com"
-  - name: testing-https
-    url: "https://example.com"
-  - name: testing-basicauth
-    url: "http://username:password@example.com"
-  - name: kubernetes-charts
-    url: "http://example.com/charts"
-  - name: malformed
-    url: "http://dl.example.com"
-  - name: testing-querystring
-    url: "http://example.com?key=value"
-  - name: testing-relative
-    url: "http://example.com/helm"
-  - name: testing-relative-trailing-slash
-    url: "http://example.com/helm/"
-  - name: testing-ca-file
-    url: "https://example.com"
-    certFile: "cert"
-    keyFile: "key"
-    caFile: "ca"
-  - name: testing-https-insecureskip-tls-verify
-    url: "https://example-https-insecureskiptlsverify.com"
-    insecure_skip_tls_verify: true 
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: testing
+  pass_credentials_all: false
+  password: ""
+  url: http://example.com
+  username: ""
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: testing-https
+  pass_credentials_all: false
+  password: ""
+  url: https://example.com
+  username: ""
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: testing-basicauth
+  pass_credentials_all: false
+  password: ""
+  url: http://username:password@example.com
+  username: ""
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: kubernetes-charts
+  pass_credentials_all: false
+  password: ""
+  url: http://example.com/charts
+  username: ""
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: malformed
+  pass_credentials_all: false
+  password: ""
+  url: http://dl.example.com
+  username: ""
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: testing-querystring
+  pass_credentials_all: false
+  password: ""
+  url: http://example.com?key=value
+  username: ""
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: testing-relative
+  pass_credentials_all: false
+  password: ""
+  url: http://example.com/helm
+  username: ""
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: testing-relative-trailing-slash
+  pass_credentials_all: false
+  password: ""
+  url: http://example.com/helm/
+  username: ""
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: testing-ca-file
+  pass_credentials_all: false
+  password: ""
+  url: https://example.com
+  username: ""
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: testing-https-insecureskip-tls-verify
+  pass_credentials_all: false
+  password: ""
+  url: https://example-https-insecureskiptlsverify.com
+  username: ""
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: bitnami
+  pass_credentials_all: false
+  password: ""
+  url: https://charts.bitnami.com/bitnami
+  username: ""

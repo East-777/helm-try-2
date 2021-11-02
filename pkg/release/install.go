@@ -23,6 +23,7 @@ func (r *InstallRel) Install() (*release.Release, error) {
 	client := action.NewInstall(r.Config.Configuration)
 	valueOpts := &values.Options{}
 
+	client.DependencyUpdate = true
 	if client.Version == "" && client.Devel {
 		client.Version = ">0.0.0-0"
 	}

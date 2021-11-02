@@ -16,34 +16,34 @@ import (
 )
 
 type AddRepo struct {
-	config *config.Config
+	Config *config.Config
 
-	name      string
-	url       string
+	Name      string
+	Url       string
 	caFile    string
 	keyFile   string
 	certFile  string
 	username  string
 	password  string
-	repoFile  string
-	repoCache string
+	RepoFile  string
+	RepoCache string
 }
 
 func (o *AddRepo) Add() error {
 
 	// Ensure the file directory exists as it is required for file locking
-	err := os.MkdirAll(filepath.Dir(o.repoFile), os.ModePerm)
+	err := os.MkdirAll(filepath.Dir(o.RepoFile), os.ModePerm)
 	if err != nil && !os.IsExist(err) {
 		return err
 	}
 
 	// Acquire a file lock for process synchronization
-	repoFileExt := filepath.Ext(o.repoFile)
+	repoFileExt := filepath.Ext(o.RepoFile)
 	var lockPath string
-	if len(repoFileExt) > 0 && len(repoFileExt) < len(o.repoFile) {
-		lockPath = strings.Replace(o.repoFile, repoFileExt, ".lock", 1)
+	if len(repoFileExt) > 0 && len(repoFileExt) < len(o.RepoFile) {
+		lockPath = strings.Replace(o.RepoFile, repoFileExt, ".lock", 1)
 	} else {
-		lockPath = o.repoFile + ".lock"
+		lockPath = o.RepoFile + ".lock"
 	}
 	fileLock := flock.New(lockPath)
 	lockCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -56,7 +56,7 @@ func (o *AddRepo) Add() error {
 		return err
 	}
 
-	b, err := ioutil.ReadFile(o.repoFile)
+	b, err := ioutil.ReadFile(o.RepoFile)
 	if err != nil && !os.IsNotExist(err) {
 		return err
 	}
@@ -67,8 +67,8 @@ func (o *AddRepo) Add() error {
 	}
 
 	c := repo.Entry{
-		Name:     o.name,
-		URL:      o.url,
+		Name:     o.Name,
+		URL:      o.Url,
 		Username: o.username,
 		Password: o.password,
 		CertFile: o.certFile,
@@ -76,27 +76,27 @@ func (o *AddRepo) Add() error {
 		CAFile:   o.caFile,
 	}
 
-	if f.Has(o.name) {
-		return fmt.Errorf("repository %q already exists\n", o.name)
+	if f.Has(o.Name) {
+		return fmt.Errorf("repository %q already exists\n", o.Name)
 	}
 
-	r, err := repo.NewChartRepository(&c, getter.All(o.config.EnvSettings))
+	r, err := repo.NewChartRepository(&c, getter.All(o.Config.EnvSettings))
 	if err != nil {
 		return err
 	}
 
-	if o.repoCache != "" {
-		r.CachePath = o.repoCache
+	if o.RepoCache != "" {
+		r.CachePath = o.RepoCache
 	}
 	if _, err := r.DownloadIndexFile(); err != nil {
-		return fmt.Errorf("err: %s ,looks like %q is not a valid chart repository or cannot be reached\n", err, o.url)
+		return fmt.Errorf("err: %s ,looks like %q is not a valid chart repository or cannot be reached\n", err, o.Url)
 	}
 
 	f.Update(&c)
 
-	if err := f.WriteFile(o.repoFile, 0644); err != nil {
+	if err := f.WriteFile(o.RepoFile, 0644); err != nil {
 		return err
 	}
-	fmt.Printf("%q has been added to your repositories\n", o.name)
+	fmt.Printf("%q has been added to your repositories\n", o.Name)
 	return nil
 }

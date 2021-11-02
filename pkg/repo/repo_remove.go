@@ -11,27 +11,27 @@ import (
 )
 
 type RemoveRepo struct {
-	config *config.Config
+	Config *config.Config
 
-	names []string
+	Names []string
 }
 
 func (o *RemoveRepo) Remove() error {
 
-	r, err := repo.LoadFile(o.config.EnvSettings.RegistryConfig)
+	r, err := repo.LoadFile(o.Config.EnvSettings.RepositoryConfig)
 	if isNotExist(err) || len(r.Repositories) == 0 {
 		return errors.New("no repositories configured")
 	}
 
-	for _, name := range o.names {
+	for _, name := range o.Names {
 		if !r.Remove(name) {
 			return errors.Errorf("no repo named %q found", name)
 		}
-		if err := r.WriteFile(o.config.EnvSettings.RegistryConfig, 0644); err != nil {
+		if err := r.WriteFile(o.Config.EnvSettings.RepositoryConfig, 0644); err != nil {
 			return err
 		}
 
-		if err := removeRepoCache(o.config.EnvSettings.RepositoryCache, name); err != nil {
+		if err := removeRepoCache(o.Config.EnvSettings.RepositoryCache, name); err != nil {
 			return err
 		}
 		fmt.Printf("%q has been removed from your repositories\n", name)

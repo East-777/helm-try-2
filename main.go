@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"helm-try-2/pkg/config"
+	"helm-try-2/pkg/release"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/cli"
-	"helm.sh/helm/v3/pkg/cli/values"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"log"
 	"os"
@@ -53,72 +54,72 @@ func init() {
 	//actionConfig.Releases = storage
 }
 
-func main() {
-	//d, _ := os.Getwd()
-	//config, err := clientcmd.BuildConfigFromFlags("", path.Join(d, "config"))
-	//if err != nil {
-	//	fmt.Printf("%v", err)
-	//	return
-	//}
-	//
-	//clientset, err := kubernetes.NewForConfig(config)
-	//if err != nil {
-	//	fmt.Printf("%v", err)
-	//	return
-	//}
-	//namespaceList, err := clientset.CoreV1().Namespaces().List(context.Background(), metav1.ListOptions{})
-	//if err != nil {
-	//	fmt.Printf("%v", err)
-	//	return
-	//}
-	//
-	//for _, namespace := range namespaceList.Items {
-	//	fmt.Println(namespace.Name)
-	//}
-
-	//o := &repoAddOptions{}
-	//o.name = "aliyuncs"
-	//o.url = "https://apphub.aliyuncs.com"
-	//o.repoFile = settings.RepositoryConfig
-	//o.repoCache = settings.RepositoryCache
-	//
-	//o.run()
-
-	client := action.NewInstall(actionConfig)
-	valueOpts := &values.Options{}
-
-	//name := "my-nginx"
-	//chart := "aliyuncs/nginx"
-
-	request := &InstallRequest{
-		config:   actionConfig,
-		settings: settings,
-		name:     "my-nginx",
-		chart:    "nginx",
-	}
-
-	//request.name = name
-	//request.chart = chart
-	release, err := request.runInstall(client, valueOpts)
-	if err != nil {
-		fmt.Printf("install err:%s", err)
-	}
-
-	fmt.Printf("release name:%s", release.Name)
-	//store := actionConfig.Releases
-	//store.Create(release)
-	//
-	//history, err := store.History(release.Name)
-	//
-	//fmt.Printf("History num:%s", len(history))
-	//
-	//unInstall := action.NewUninstall(actionConfig)
-	//
-	//unInstall.Run(release.Name)
-	//
-	//history2, _ := store.History(release.Name)
-	//fmt.Printf("History2 num:%s", len(history2))
-}
+//func main() {
+//	//d, _ := os.Getwd()
+//	//config, err := clientcmd.BuildConfigFromFlags("", path.Join(d, "config"))
+//	//if err != nil {
+//	//	fmt.Printf("%v", err)
+//	//	return
+//	//}
+//	//
+//	//clientset, err := kubernetes.NewForConfig(config)
+//	//if err != nil {
+//	//	fmt.Printf("%v", err)
+//	//	return
+//	//}
+//	//namespaceList, err := clientset.CoreV1().Namespaces().List(context.Background(), metav1.ListOptions{})
+//	//if err != nil {
+//	//	fmt.Printf("%v", err)
+//	//	return
+//	//}
+//	//
+//	//for _, namespace := range namespaceList.Items {
+//	//	fmt.Println(namespace.Name)
+//	//}
+//
+//	//o := &repoAddOptions{}
+//	//o.name = "aliyuncs"
+//	//o.url = "https://apphub.aliyuncs.com"
+//	//o.repoFile = settings.RepositoryConfig
+//	//o.repoCache = settings.RepositoryCache
+//	//
+//	//o.run()
+//
+//	client := action.NewInstall(actionConfig)
+//	valueOpts := &values.Options{}
+//
+//	//name := "my-nginx"
+//	//chart := "aliyuncs/nginx"
+//
+//	request := &InstallRequest{
+//		config:   actionConfig,
+//		settings: settings,
+//		name:     "my-nginx",
+//		chart:    "nginx",
+//	}
+//
+//	//request.name = name
+//	//request.chart = chart
+//	release, err := request.runInstall(client, valueOpts)
+//	if err != nil {
+//		fmt.Printf("install err:%s", err)
+//	}
+//
+//	fmt.Printf("release name:%s", release.Name)
+//	//store := actionConfig.Releases
+//	//store.Create(release)
+//	//
+//	//history, err := store.History(release.Name)
+//	//
+//	//fmt.Printf("History num:%s", len(history))
+//	//
+//	//unInstall := action.NewUninstall(actionConfig)
+//	//
+//	//unInstall.Run(release.Name)
+//	//
+//	//history2, _ := store.History(release.Name)
+//	//fmt.Printf("History2 num:%s", len(history2))
+//}
 
 //func main() {
 //
@@ -142,28 +143,55 @@ func main() {
 //
 //}
 
+func main() {
+
+	config, err := config.New("default")
+
+	if err != nil {
+		fmt.Printf("err:%s", err)
+		return
+	}
+	join := path.Join(config.RepositoryCache, "nginx-9.5.12.tgz")
+	install := &release.InstallRel{
+		Config: config,
+		Name:   "my-nginx",
+		Chart:  join,
+	}
+
+	r, err := install.Install()
+
+	if err != nil {
+		fmt.Printf("err:%s", err)
+		return
+	}
+
+	fmt.Printf("version:%s", r.Version)
+
+}
+
 //func main() {
-//
-//	config, err := config.New("default")
-//
-//	if err != nil {
-//		fmt.Printf("err:%s", err)
-//		return
-//	}
-//
-//	install := &release.InstallRel{
+//	config, _ := config.New("default")
+//	r := &repo.RemoveRepo{
 //		Config: config,
-//		Name:   "my-nginx",
-//		Chart:  "aliyuncs/nginx",
+//		Names:  []string{"aliyuncs"},
 //	}
 //
-//	r, err := install.Install()
-//
+//	err := r.Remove()
 //	if err != nil {
-//		fmt.Printf("err:%s", err)
-//		return
+//		fmt.Println(err)
 //	}
 //
-//	fmt.Printf("version:%s",r.Version)
+//	a := &repo.AddRepo{
+//		Config:    config,
+//		Name:      "aliyuncs",
+//		Url:       "https://apphub.aliyuncs.com",
+//		RepoFile:  config.RepositoryConfig,
+//		RepoCache: config.RepositoryCache,
+//	}
 //
+//	err := a.Add()
+//
+//	if err != nil{
+//		fmt.Println(err)
+//	}
 //}
