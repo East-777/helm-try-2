@@ -4,6 +4,9 @@ go 1.16
 
 require (
 	github.com/gofrs/flock v0.8.0
+	github.com/openshift/api v3.9.0+incompatible // indirect
+	github.com/openshift/library-go v0.0.0-20211102122425-bd4484acad90 // indirect
+	github.com/openshift/origin v4.1.0+incompatible
 	github.com/pkg/errors v0.9.1
 	golang.org/x/term v0.0.0-20210220032956-6a3ed077a48d
 	gopkg.in/src-d/go-git.v4 v4.13.1
